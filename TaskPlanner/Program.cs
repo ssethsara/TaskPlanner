@@ -19,8 +19,8 @@ namespace TaskPlanner
             taskPlanner.SetHoliday(new DateTime(2004, 5, 27, 0, 0, 0));
             taskPlanner.SetHoliday(new DateTime(2004, 5, 21, 0, 0, 0));
             // Arrange
-            var startDate = new DateTime(2017, 12, 05, 14, 00, 00);
-            double days = 0.5;
+            var startDate = new DateTime(2017, 12, 11, 14, 00, 00);
+            double days = 0.125;
 
 
 

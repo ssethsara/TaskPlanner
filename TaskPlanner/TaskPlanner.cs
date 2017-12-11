@@ -77,20 +77,23 @@ namespace TaskPlanner
         {
             int days = (int)estimatedDays;
             DateTime endDate= date;
-            DateTime loopinDate = date;
+            DateTime loopingDate = date;
 
 
             if (estimatedDays >= 0)
             {
-                
+             
                     endDate = endDate.AddDays(days);
                 
+                
 
-                while (!DateTime.Equals(loopinDate, endDate))
+                
+
+                while (!DateTime.Equals(loopingDate, endDate))
                 {
-                    loopinDate = loopinDate.AddDays(1);
+                    loopingDate = loopingDate.AddDays(1);
 
-                    if (loopinDate.DayOfWeek == DayOfWeek.Saturday || loopinDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopinDate))
+                    if (loopingDate.DayOfWeek == DayOfWeek.Saturday || loopingDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopingDate))
                     {
                         endDate=endDate.AddDays(1);
                     }
@@ -114,11 +117,11 @@ namespace TaskPlanner
              
                 
 
-                while (!DateTime.Equals(loopinDate, endDate))
+                while (!DateTime.Equals(loopingDate, endDate))
                 {
-                    loopinDate = loopinDate.AddDays(-1);
+                    loopingDate = loopingDate.AddDays(-1);
 
-                    if (loopinDate.DayOfWeek == DayOfWeek.Saturday || loopinDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopinDate))
+                    if (loopingDate.DayOfWeek == DayOfWeek.Saturday || loopingDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopingDate))
                     {
                         endDate=endDate.AddDays(-1);
                     }
