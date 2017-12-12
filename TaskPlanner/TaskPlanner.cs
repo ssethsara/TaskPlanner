@@ -41,7 +41,7 @@ namespace TaskPlanner
             CalculatedDate = startDate;
             decimalPartOfday = days%1 ;
 
-            CalculatedDate = countTime(CalculatedDate, decimalPartOfday , days);
+            CalculatedDate = CountTime(CalculatedDate, decimalPartOfday , days);
             CalculatedDate = CountDays(CalculatedDate, days);
           
             Console.WriteLine("end: {0:f}", CalculatedDate);
@@ -126,39 +126,40 @@ namespace TaskPlanner
         }
 
 
-        DateTime countTime(DateTime CalculatedDate,double decimalPartOfday,double estimatedDays)
+        DateTime CountTime(DateTime calculatedDate,double decimalPartOfday,double estimatedDays)
         {
             TimeSpan Workingduration = stopTime - startTime;
             TimeSpan timeDuration;
             TimeSpan wholeTime;
-            TimeSpan endTime;
+            
 
             timeDuration = Workingduration * decimalPartOfday;
 
             int days = (int)estimatedDays;
+
             if (estimatedDays > 0)
             {
-                if (CheckHolidays(CalculatedDate))
+                if (CheckHolidays(calculatedDate))
                 {
                     wholeTime = startTime + timeDuration;
-                    CalculatedDate = CalculatedDate.AddDays(1);
+                    calculatedDate = calculatedDate.AddDays(1);
                 }
-                else if (CalculatedDate.TimeOfDay>startTime && CalculatedDate.TimeOfDay< stopTime)
+                else if (calculatedDate.TimeOfDay>startTime && calculatedDate.TimeOfDay< stopTime)
                 {
-                    wholeTime = CalculatedDate.TimeOfDay + timeDuration;
+                    wholeTime = calculatedDate.TimeOfDay + timeDuration;
 
                 }
-                else if (CalculatedDate.TimeOfDay<=startTime)
+                else if (calculatedDate.TimeOfDay<=startTime)
                 {
                     wholeTime = stopTime + timeDuration;
-                    CalculatedDate = CalculatedDate.AddDays(-1);
+                    calculatedDate = calculatedDate.AddDays(-1);
                 }
-                else if (CalculatedDate.TimeOfDay > stopTime)
+                else if (calculatedDate.TimeOfDay > stopTime)
                 {
-                    CalculatedDate = CalculatedDate.AddDays(1);
+                    calculatedDate = calculatedDate.AddDays(1);
                     wholeTime = startTime + timeDuration; 
                 }
-                else if (CalculatedDate.TimeOfDay == stopTime)
+                else if (calculatedDate.TimeOfDay == stopTime)
                 {
                     wholeTime = stopTime + timeDuration;
                 }
@@ -166,47 +167,67 @@ namespace TaskPlanner
             else
             {
 
-                if (CheckHolidays(CalculatedDate))
+                if (CheckHolidays(calculatedDate))
                 {
                     wholeTime = stopTime + timeDuration;
                 }
-                else if (CalculatedDate.TimeOfDay > startTime && CalculatedDate.TimeOfDay< stopTime)
+                else if (calculatedDate.TimeOfDay > startTime && calculatedDate.TimeOfDay< stopTime)
                 {
-                    wholeTime = CalculatedDate.TimeOfDay + timeDuration;
+                    wholeTime = calculatedDate.TimeOfDay + timeDuration;
                 }
-                else if (CalculatedDate.TimeOfDay <= startTime && decimalPartOfday!=0)
+                else if (calculatedDate.TimeOfDay <= startTime && decimalPartOfday!=0)
                 {
                     wholeTime = stopTime + timeDuration;
-                    CalculatedDate = CalculatedDate.AddDays(-1);
+                    calculatedDate = calculatedDate.AddDays(-1);
                 }
-                else if (CalculatedDate.TimeOfDay == startTime && decimalPartOfday == 0)
+                else if (calculatedDate.TimeOfDay == startTime && decimalPartOfday == 0)
                 {
                     wholeTime = startTime + timeDuration;
                 }
-                else if (CalculatedDate.TimeOfDay > stopTime)
+                else if (calculatedDate.TimeOfDay > stopTime)
                 {
                     wholeTime = stopTime + timeDuration;
 
                 }
-                else if (CalculatedDate.TimeOfDay == stopTime && decimalPartOfday == 0)
+                else if (calculatedDate.TimeOfDay == stopTime && decimalPartOfday == 0)
                 {
                     wholeTime = startTime - timeDuration;
-                    CalculatedDate = CalculatedDate.AddDays(1);
+                    calculatedDate = calculatedDate.AddDays(1);
 
                 }
             }
+
+            return SplitTime(calculatedDate, wholeTime, estimatedDays, decimalPartOfday);
+
+        }
+
+        bool CheckHolidaysAndWeekDays(DateTime date)
+        {
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(date))
+                return true;
+            else
+                return false;
+
+
+        }
+
+
+        DateTime SplitTime(DateTime calculatedDate,TimeSpan wholeTime,double estimatedDays,double decimalPartOfday)
+        {
+
+            TimeSpan endTime;
             if (estimatedDays >= 0)
             {
                 if (wholeTime < startTime)
                 {
                     TimeSpan splitTime = startTime - wholeTime;
-                    endTime = stopTime- splitTime;
+                    endTime = stopTime - splitTime;
                 }
                 else if (wholeTime > stopTime)
                 {
                     TimeSpan splitTime = wholeTime - stopTime;
                     endTime = startTime + splitTime;
-                    CalculatedDate = CalculatedDate.AddDays(1);
+                    calculatedDate = calculatedDate.AddDays(1);
                 }
                 else
                 {
@@ -219,33 +240,24 @@ namespace TaskPlanner
                 {
                     TimeSpan splitTime = startTime - wholeTime;
                     endTime = stopTime - splitTime;
-                    CalculatedDate = CalculatedDate.AddDays(-1);
+                    calculatedDate = calculatedDate.AddDays(-1);
                 }
                 else if (wholeTime > stopTime)
                 {
                     endTime = stopTime;
                 }
-                else if (wholeTime == startTime && decimalPartOfday<0)
+                else if (wholeTime == startTime && decimalPartOfday < 0)
                 {
                     endTime = wholeTime;
-                    CalculatedDate = CalculatedDate.AddDays(1);
+                    calculatedDate = calculatedDate.AddDays(1);
                 }
                 else
                 {
                     endTime = wholeTime;
                 }
+ 
             }
-                return new DateTime(CalculatedDate.Year, CalculatedDate.Month, CalculatedDate.Day, endTime.Hours, endTime.Minutes, 00);
-            
-        }
-
-        bool CheckHolidaysAndWeekDays(DateTime date)
-        {
-            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(date))
-                return true;
-            else
-                return false;
-
+            return new DateTime(calculatedDate.Year, calculatedDate.Month, calculatedDate.Day, endTime.Hours, endTime.Minutes, 00);
 
         }
 
