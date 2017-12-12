@@ -6,7 +6,6 @@ namespace TaskPlanner
 {
    public class TaskPlanner:ITaskPlanner
     {
-
         IList<DateTime> Holidays = new List<DateTime>();
         IList<DateTime> RecurringHolidays = new List<DateTime>();
 
@@ -42,7 +41,6 @@ namespace TaskPlanner
             CalculatedDate = startDate;
             decimalPartOfday = days%1 ;
 
-
             CalculatedDate = countTime(CalculatedDate, decimalPartOfday , days);
             CalculatedDate = CountDays(CalculatedDate, days);
           
@@ -72,7 +70,6 @@ namespace TaskPlanner
             return false;
         }
 
-
         DateTime CountDays(DateTime date,double estimatedDays)
         {
             int days = (int)estimatedDays;
@@ -92,20 +89,14 @@ namespace TaskPlanner
                 {
                     endDate = endDate.AddDays(days);
                 }
-                  
-               
-
                 while (!DateTime.Equals(loopingDate, endDate))
                 {
                     loopingDate = loopingDate.AddDays(1);
                     
-                    if (loopingDate.DayOfWeek == DayOfWeek.Saturday || loopingDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopingDate))
+                    if (CheckHolidaysAndWeekDays(loopingDate))
                     {
                         endDate=endDate.AddDays(1);
                     }
-
-                    
-
                 }
                 
             }
@@ -119,15 +110,11 @@ namespace TaskPlanner
                 {
                     endDate = endDate.AddDays(days);
                 }
-                
-             
-                
-
                 while (!DateTime.Equals(loopingDate, endDate))
                 {
                     loopingDate = loopingDate.AddDays(-1);
 
-                    if (loopingDate.DayOfWeek == DayOfWeek.Saturday || loopingDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopingDate))
+                    if (CheckHolidaysAndWeekDays(loopingDate))
                     {
                         endDate=endDate.AddDays(-1);
                     }
@@ -148,19 +135,9 @@ namespace TaskPlanner
 
             timeDuration = Workingduration * decimalPartOfday;
 
-
-
-
-
-
-
             int days = (int)estimatedDays;
-
-            
-
             if (estimatedDays > 0)
             {
-
                 if (CheckHolidays(CalculatedDate))
                 {
                     wholeTime = startTime + timeDuration;
@@ -185,10 +162,6 @@ namespace TaskPlanner
                 {
                     wholeTime = stopTime + timeDuration;
                 }
-
-
-
-
             }
             else
             {
@@ -222,9 +195,6 @@ namespace TaskPlanner
 
                 }
             }
-
-
-
             if (estimatedDays >= 0)
             {
                 if (wholeTime < startTime)
@@ -242,11 +212,6 @@ namespace TaskPlanner
                 {
                     endTime = wholeTime;
                 }
-
-                
-
-
-
             }
             else
             {
@@ -269,16 +234,17 @@ namespace TaskPlanner
                 {
                     endTime = wholeTime;
                 }
-
-
             }
-
-            
-
-
-
-
                 return new DateTime(CalculatedDate.Year, CalculatedDate.Month, CalculatedDate.Day, endTime.Hours, endTime.Minutes, 00);
+            
+        }
+
+        bool CheckHolidaysAndWeekDays(DateTime date)
+        {
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(date))
+                return true;
+            else
+                return false;
 
 
         }
