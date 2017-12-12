@@ -131,7 +131,6 @@ namespace TaskPlanner
             TimeSpan Workingduration = stopTime - startTime;
             TimeSpan timeDuration;
             TimeSpan wholeTime;
-            
 
             timeDuration = Workingduration * decimalPartOfday;
 
@@ -166,7 +165,6 @@ namespace TaskPlanner
             }
             else
             {
-
                 if (CheckHolidays(calculatedDate))
                 {
                     wholeTime = stopTime + timeDuration;
