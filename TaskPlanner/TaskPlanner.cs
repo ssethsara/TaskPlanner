@@ -82,24 +82,30 @@ namespace TaskPlanner
 
             if (estimatedDays >= 0)
             {
-             
-                    endDate = endDate.AddDays(days);
-                
-                
 
-                
+
+                if (estimatedDays < 1)
+                {
+                    loopingDate = loopingDate.AddDays(-1);
+                }
+                else
+                {
+                    endDate = endDate.AddDays(days);
+                }
+                  
+               
 
                 while (!DateTime.Equals(loopingDate, endDate))
                 {
                     loopingDate = loopingDate.AddDays(1);
-
+                    
                     if (loopingDate.DayOfWeek == DayOfWeek.Saturday || loopingDate.DayOfWeek == DayOfWeek.Sunday || CheckHolidays(loopingDate))
                     {
                         endDate=endDate.AddDays(1);
                     }
+
                     
-                   
-                    
+
                 }
                 
             }
@@ -154,12 +160,16 @@ namespace TaskPlanner
 
             if (estimatedDays > 0)
             {
-                
 
-
-                if(CalculatedDate.TimeOfDay>startTime && CalculatedDate.TimeOfDay< stopTime)
+                if (CheckHolidays(CalculatedDate))
+                {
+                    wholeTime = startTime + timeDuration;
+                    CalculatedDate = CalculatedDate.AddDays(1);
+                }
+                else if (CalculatedDate.TimeOfDay>startTime && CalculatedDate.TimeOfDay< stopTime)
                 {
                     wholeTime = CalculatedDate.TimeOfDay + timeDuration;
+
                 }
                 else if (CalculatedDate.TimeOfDay<=startTime)
                 {
@@ -182,7 +192,12 @@ namespace TaskPlanner
             }
             else
             {
-                if (CalculatedDate.TimeOfDay > startTime && CalculatedDate.TimeOfDay< stopTime)
+
+                if (CheckHolidays(CalculatedDate))
+                {
+                    wholeTime = stopTime + timeDuration;
+                }
+                else if (CalculatedDate.TimeOfDay > startTime && CalculatedDate.TimeOfDay< stopTime)
                 {
                     wholeTime = CalculatedDate.TimeOfDay + timeDuration;
                 }
@@ -227,6 +242,11 @@ namespace TaskPlanner
                 {
                     endTime = wholeTime;
                 }
+
+                
+
+
+
             }
             else
             {
@@ -252,6 +272,8 @@ namespace TaskPlanner
 
 
             }
+
+            
 
 
 

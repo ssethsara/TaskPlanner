@@ -274,7 +274,7 @@ namespace TaskPlanner.Tests
             double days = 0.25;
 
             DateTime result = _tut.GetTaskFinishingDate(startDate, days);
-            DateTime expected = new DateTime(2017, 12, 11, 16, 00, 00);
+            DateTime expected = new DateTime(2017, 12, 12, 10, 00, 00);
 
             Assert.AreEqual(expected, result);
 
@@ -292,7 +292,7 @@ namespace TaskPlanner.Tests
             double days = 0.125;
 
             DateTime result = _tut.GetTaskFinishingDate(startDate, days);
-            DateTime expected = new DateTime(2017, 12, 11, 15, 00, 00);
+            DateTime expected = new DateTime(2017, 12, 12, 9, 00, 00);
 
             Assert.AreEqual(expected, result);
 
@@ -428,7 +428,7 @@ namespace TaskPlanner.Tests
             double days = 0.5;
 
             DateTime result = _tut.GetTaskFinishingDate(startDate, days);
-            DateTime expected = new DateTime(2017, 12, 09, 10, 00, 00);
+            DateTime expected = new DateTime(2017, 12, 12, 10, 00, 00);
 
             Assert.AreEqual(expected, result);
 
@@ -448,6 +448,45 @@ namespace TaskPlanner.Tests
 
             DateTime result = _tut.GetTaskFinishingDate(startDate, days);
             DateTime expected = new DateTime(2017, 12, 08, 10, 00, 00);
+
+            Assert.AreEqual(expected, result);
+
+
+        }
+
+
+        [TestMethod]
+        public void OnStartFromVacation_withPlusDays_ShouldReturnEndDate()
+        {
+
+            _tut.SetRecurringHoliday(new DateTime(2004, 12, 11, 0, 0, 0));
+            _tut.SetHoliday(new DateTime(2017, 12, 6, 0, 0, 0));
+            _tut.SetRecurringHoliday(new DateTime(2004, 12, 7, 0, 0, 0));
+
+            DateTime startDate = new DateTime(2017, 12, 11, 14, 00, 00);
+            double days = 2.5;
+
+            DateTime result = _tut.GetTaskFinishingDate(startDate, days);
+            DateTime expected = new DateTime(2017, 12, 14, 12, 00, 00);
+
+            Assert.AreEqual(expected, result);
+
+
+        }
+
+        [TestMethod]
+        public void OnStartFromVacation_withMinusDays_ShouldReturnEndDate()
+        {
+
+            _tut.SetRecurringHoliday(new DateTime(2004, 12, 11, 0, 0, 0));
+            _tut.SetHoliday(new DateTime(2017, 12, 6, 0, 0, 0));
+            _tut.SetRecurringHoliday(new DateTime(2004, 12, 7, 0, 0, 0));
+
+            DateTime startDate = new DateTime(2017, 12, 11, 14, 00, 00);
+            double days = -2.5;
+
+            DateTime result = _tut.GetTaskFinishingDate(startDate, days);
+            DateTime expected = new DateTime(2017, 12, 05, 12, 00, 00);
 
             Assert.AreEqual(expected, result);
 
